@@ -1,5 +1,9 @@
+package projects.Pacman;
+
 import info.gridworld.actor.*;
 import info.gridworld.grid.*;
+
+import javax.swing.*;
 
 /**
  * Created by jonah on 5/31/18.
@@ -8,6 +12,7 @@ public class PacManBoard extends ActorWorld{
     public static final int BOARDHEIGHT= 21;
     public static final int BOARDWIDTH = 19;
 
+    private boolean gameOver = false;
     private int foodOnBoard;
 
     public PacManBoard(){
@@ -20,21 +25,28 @@ public class PacManBoard extends ActorWorld{
      */
     @Override
     public void step(){
-        super.step();
+        if (!gameOver) {
+            super.step();
 
-        boolean isFood = false;
+            boolean isFood = false;
 
-        for(int i = 0; i < BOARDHEIGHT; i++){
-            for(int j = 0; j < BOARDWIDTH; j++){
-                if (isSmallFood(new Location(9, 18)) || isBigFood((new Location(9, 18))))  {
-                    isFood = true;
+            for (int i = 0; i < BOARDHEIGHT; i++) {
+                for (int j = 0; j < BOARDWIDTH; j++) {
+                    if (isSmallFood(new Location(i, j)) || isBigFood((new Location(i, j)))) {
+                        isFood = true;
+                    }
                 }
             }
-        }
 
-        if(!isFood)
-            System.out.println("Pacman Wins!");
-            isFood = true;
+            if (!isFood) {
+                System.out.println("Pacman Wins!");
+                gameOver = true;
+                JOptionPane.showMessageDialog(null,
+                        "Pacman's a Winner",
+                        "Pacman's a Winner",
+                        JOptionPane.WARNING_MESSAGE);
+            }
+        }
     }
 
     public boolean isSmallFood(Location nextOne) {

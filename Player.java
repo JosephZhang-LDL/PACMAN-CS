@@ -44,10 +44,10 @@ public class Player extends Actor {
         scoreBoard.setVisible(true);
         p = new JLabel();
         scoreBoard.getContentPane().add(p);
-        p.setBackground(Color.LIGHT_GRAY);
+        p.setBackground(Color.WHITE);
         p.setOpaque(true);
-        p.setForeground(Color.RED);
-        p.setFont(new Font("SansSerif", Font.BOLD, 18));
+        p.setForeground(Color.BLUE);
+        p.setFont(new Font("CALIBRI", Font.BOLD, 18));
         p.setBorder(BorderFactory.createEmptyBorder(3,3,3,3));
         p.setText("Score: " + scoreValue);
     }
