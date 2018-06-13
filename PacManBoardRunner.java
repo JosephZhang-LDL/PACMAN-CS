@@ -1,7 +1,6 @@
 /**
  * Created by jonah on 5/30/18.
  */
-package projects.Pacman;
 
 import info.gridworld.actor.Actor;
 import info.gridworld.grid.Grid;

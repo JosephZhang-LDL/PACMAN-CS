@@ -1,5 +1,3 @@
-package projects.Pacman;
-
 import info.gridworld.actor.Actor;
 import info.gridworld.actor.Flower;
 import info.gridworld.grid.Grid;
@@ -18,6 +16,8 @@ public class Player extends Actor {
     int lives;
     int scoreValue;
     boolean isSuper = false;
+    public static final int SUPERLENGTH = 40;
+    private int superSteps;
     private final int LEFT = 1;
     private final int RIGHT= -1;
     private final int UP = 2;
@@ -25,7 +25,9 @@ public class Player extends Actor {
     private int checkirection;
     private boolean teleported;
 
-
+    /**
+     * Sets everything up
+     */
     public Player() {
         lives = 3;
         scoreValue = 0;
@@ -33,8 +35,14 @@ public class Player extends Actor {
         setColor(Color.YELLOW);
         checkirection = 0;
         teleported = false;
+        superSteps = 0;
     }
 
+    /**
+     * More specific constructor to implement when the game is more complete
+     * @param newLives number of lives
+     * @param newScore player's score
+     */
     public Player(int newLives, int newScore) {
         lives = newLives;
         scoreValue = newScore;
@@ -42,12 +50,24 @@ public class Player extends Actor {
         teleported  = false;
     }
 
+    /**
+     * What Pacman does in a step, decides whether it's a normal step, super step, or that weird situation where he's
+     * about to teleport
+     */
     public void act() {
         Grid<Actor> gr = getGrid();
+        //Act like this if Pacman is super
         if(isSuper)
         {
             doSuper();
+            superSteps--;
+
+            if(superSteps == 0){
+                isSuper = false;
+                System.out.println("SUPER IS " + isSuper);
+            }
         }
+
         else if (getLocation().equals(new Location(9,0)) && !teleported)               //Teleport from left side
         {
             if(isSmallFood(new Location(9, 18)))
@@ -59,6 +79,7 @@ public class Player extends Actor {
             {
                 scoreValue += 10;
                 isSuper = true;
+                superSteps = SUPERLENGTH;
             }
 
             moveTo(new Location(9, 18));
@@ -76,13 +97,14 @@ public class Player extends Actor {
             {
                 scoreValue += 10;
                 isSuper = true;
+                superSteps = SUPERLENGTH;
                 System.out.println("SUPER IS " + isSuper);
             }
 
             moveTo(new Location(9,0));
             teleported = true;
         }
-
+        //Normal movement otherwise
         else if (canMove())
         {
             Location loc = getLocation();
@@ -98,6 +120,7 @@ public class Player extends Actor {
             {
                 isSuper = true;
                 scoreValue+=10;
+                superSteps = SUPERLENGTH;
                 System.out.println("SUPER IS " + isSuper);
             }
 
@@ -105,6 +128,7 @@ public class Player extends Actor {
             Actor inFront = gr.get(next);
             moveTo(next);
         }
+        //Wait what
         else {
 
         }
@@ -119,6 +143,9 @@ public class Player extends Actor {
 
     }
 
+    /**
+     * Separate sort of act method that changes some things up if pacman is super
+     */
     public void doSuper() {
         Grid<Actor> gr = getGrid();
         if (getLocation().equals(new Location(9,0)) && !teleported)               //Teleport from left side
@@ -154,7 +181,7 @@ public class Player extends Actor {
             moveTo(new Location(9,0));
             teleported = true;
         }
-
+        //Normal movement otherwise, but it's super this happens
         else if (canMove())
         {
             Location loc = getLocation();

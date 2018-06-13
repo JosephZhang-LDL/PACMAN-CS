@@ -1,5 +1,3 @@
-package projects.Pacman;
-
 import info.gridworld.actor.Actor;
 
 /**
@@ -16,6 +14,9 @@ public abstract class Food extends Actor{
         return pointValue;
     }
 
+    /**
+     * Food just sits there and takes it, so this act method overides the normal spinning around like a dummy
+     */
     @Override
     public void act(){}
 }

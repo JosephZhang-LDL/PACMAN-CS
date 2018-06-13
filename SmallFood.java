@@ -1,5 +1,3 @@
-package projects.Pacman;
-
 /**
  * Created by jonah on 6/6/18.
  */
@@ -8,6 +6,10 @@ public class SmallFood extends Food {
         super(100);
     }
 
+    /**
+     * This wasn't used either
+     * @return
+     */
     public int giveFood(){
         removeSelfFromGrid();
         return super.getPointValue();

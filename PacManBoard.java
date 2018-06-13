@@ -1,5 +1,3 @@
-package projects.Pacman;
-
 import info.gridworld.actor.*;
 import info.gridworld.grid.*;
 
@@ -17,6 +15,9 @@ public class PacManBoard extends ActorWorld{
         foodOnBoard = 0;
     }
 
+    /**
+     * Please don't expand this
+     */
     public void buildBoard(){
         for(int i = 0; i < PacManBoard.BOARDWIDTH; i++){
             this.add(new Location(0, i), new Wall());

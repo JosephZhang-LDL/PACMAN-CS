@@ -1,5 +1,3 @@
-package projects.Pacman;
-
 import info.gridworld.actor.Actor;
 import java.awt.*;
 
@@ -11,6 +9,10 @@ public class Wall extends Actor {
         setColor(Color.MAGENTA);
     }
 
+    /**
+     * This class is literally just a marker so Pacman can't do anything illegal, and to hold the wall sprite
+     * Overrides the act method so it does even more nothing that before
+     */
     @Override
     public void act(){}
 }
