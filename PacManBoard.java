@@ -16,6 +16,56 @@ public class PacManBoard extends ActorWorld{
     }
 
     /**
+     * Looks at step sequence for the entire board, to check for some game conditions
+     */
+    @Override
+    public void step(){
+        super.step();
+
+        boolean isFood = false;
+
+        for(int i = 0; i < BOARDHEIGHT; i++){
+            for(int j = 0; j < BOARDWIDTH; j++){
+                if (isSmallFood(new Location(9, 18)) || isBigFood((new Location(9, 18))))  {
+                    isFood = true;
+                }
+            }
+        }
+
+        if(!isFood)
+            System.out.println("Pacman Wins!");
+            isFood = true;
+    }
+
+    public boolean isSmallFood(Location nextOne) {
+        Grid gr = this.getGrid();
+        if(gr == null) {
+            return false;
+        } else {
+            if(!gr.isValid(nextOne)) {
+                return false;
+            } else {
+                Actor neighbor = (Actor)gr.get(nextOne);
+                return neighbor instanceof SmallFood;
+            }
+        }
+    }
+
+    public boolean isBigFood(Location nextOne) {
+        Grid gr = this.getGrid();
+        if(gr == null) {
+            return false;
+        } else {
+            if(!gr.isValid(nextOne)) {
+                return false;
+            } else {
+                Actor neighbor = (Actor)gr.get(nextOne);
+                return neighbor instanceof BigFood;
+            }
+        }
+    }
+
+    /**
      * Please don't expand this
      */
     public void buildBoard(){
