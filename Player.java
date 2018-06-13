@@ -1,13 +1,14 @@
+package projects.Pacman;
 import info.gridworld.actor.Actor;
-import info.gridworld.actor.Flower;
-import info.gridworld.grid.Grid;
-import info.gridworld.grid.Location;
+        import info.gridworld.actor.Flower;
+        import info.gridworld.grid.Grid;
+        import info.gridworld.grid.Location;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.Scanner;
+        import javax.swing.*;
+        import java.awt.*;
+        import java.awt.event.KeyEvent;
+        import java.awt.event.KeyListener;
+        import java.util.Scanner;
 
 /**
  * Created by 20ZhangJ on 6/1/2018.
@@ -24,6 +25,8 @@ public class Player extends Actor {
     private final int DOWN  = -2;
     private int checkirection;
     private boolean teleported;
+    private JLabel p;
+    JFrame scoreBoard;
 
     /**
      * Sets everything up
@@ -36,6 +39,17 @@ public class Player extends Actor {
         checkirection = 0;
         teleported = false;
         superSteps = 0;
+        scoreBoard = new JFrame();
+        scoreBoard.setSize(new Dimension(200, 100));
+        scoreBoard.setVisible(true);
+        p = new JLabel();
+        scoreBoard.getContentPane().add(p);
+        p.setBackground(Color.LIGHT_GRAY);
+        p.setOpaque(true);
+        p.setForeground(Color.RED);
+        p.setFont(new Font("SansSerif", Font.BOLD, 18));
+        p.setBorder(BorderFactory.createEmptyBorder(3,3,3,3));
+        p.setText("Score: " + scoreValue);
     }
 
     /**
@@ -133,6 +147,7 @@ public class Player extends Actor {
 
         }
 
+        p.setText("Score: " + scoreValue);
     }
 
     public int trackFood() {
@@ -264,6 +279,10 @@ public class Player extends Actor {
                 return neighbor instanceof BigFood;
             }
         }
+    }
+
+    protected void paintComponent(Graphics g) {
+        p.setText("Score:  " + scoreValue);
     }
 
 }
