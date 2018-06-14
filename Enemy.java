@@ -1,3 +1,6 @@
+package projects.Pacman;
+
+import info.gridworld.actor.Actor;
 import info.gridworld.actor.Critter;
 import info.gridworld.grid.Grid;
 import info.gridworld.grid.Location;
@@ -48,5 +51,24 @@ public class Enemy extends Critter {
                 }
         }
         return PossibleMoves;
+    }
+
+    public boolean isCollision() {
+        Grid gr = getGrid();
+        if(gr == null) {
+            return false;
+        } else {
+            Location loc = this.getLocation();
+            Location next = loc.getAdjacentLocation(this.getDirection());
+            if(!gr.isValid(next)) {
+                return false;
+            } else {
+                Actor neighbor = (Actor)gr.get(next);
+                /*if (neighbor instanceof Food) {
+                    return true;
+                }*/
+                return neighbor instanceof Enemy;
+            }
+        }
     }
 }
