@@ -13,7 +13,7 @@ public class Inky extends Enemy {
         public Inky() {
             previous = this.getLocation();
             this.setDirection(360);
-            this.setColor(Color.RED);
+            this.setColor(Color.PINK);
         }
 
         public void act() {
@@ -38,12 +38,10 @@ public class Inky extends Enemy {
                 int row = blinky.getRow();
                 int col = blinky.getCol();
 
-                double dir = blinky.getDirectionToward(pacMan);
+                //90 degrees is added so it works with the unit circle
+                double dir = 90 + blinky.getDirectionToward(pacMan);
                 int distance = 2 * (int) Math.sqrt(Math.pow(blinky.getCol() - pacMan.getCol(), 2) +
                         Math.pow(blinky.getRow() - pacMan.getRow(), 2));
-
-                //Need to turn dir to radians to make Math.sin/cos to work
-                dir *= Math.PI / 180;
 
                 row += distance * Math.sin(dir);
                 col += distance * Math.cos(dir);
