@@ -53,9 +53,11 @@ public class Pinky extends Enemy {
             Location target = findPacMan();
             int direction = Getdirection();
             if(direction == 0){
-                target = new Location(target.getCol(),target.getRow() + 4);
+                target = new Location(target.getRow() + 4,target.getCol());
             }
-            else target = new Location(target.getCol() + 4,target.getRow() + 4);
+            else if(direction == 90)target = new Location(target.getRow(),target.getCol() + 4);
+            else if(direction == 180)target = new Location(target.getRow() + -4,target.getCol());
+            else if(direction == 270)target = new Location(target.getRow(),target.getCol() - 4);
             Location chosen = new Location(0, 0);
             double distance = 10000;
             double temp;
@@ -73,6 +75,7 @@ public class Pinky extends Enemy {
             else last = false;
 
             previous = this.getLocation();
+            chosen = checkTeleport(chosen);
             return chosen;
         }
 

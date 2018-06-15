@@ -9,12 +9,8 @@ import java.util.ArrayList;
 
 public class Enemy extends Critter {
 
-   private  int totalMoves = 0;
-   private boolean last = false;
-    Location previous;
+
     public Enemy(){
-        previous = this.getLocation();
-        last= false;
     }
 
     public Location findPacMan() {
@@ -28,8 +24,6 @@ public class Enemy extends Critter {
             }
         }
         return loc;
-
-
     }
     public boolean isCollision(int direction) {
         Grid gr = getGrid();
@@ -42,9 +36,6 @@ public class Enemy extends Critter {
                 return false;
             } else {
                 Actor neighbor = (Actor)gr.get(next);
-                /*if (neighbor instanceof Food) {
-                    return true;
-                }*/
                 return neighbor instanceof Enemy;
             }
         }
@@ -71,37 +62,21 @@ public class Enemy extends Critter {
     public ArrayList<Location> getMoveLocations() {
         ArrayList<Location> PossibleMoves = new ArrayList<>();
         for (int degree = 0; degree < 360; degree += 90) {
-            if (this.getGrid().get(this.getLocation().getAdjacentLocation(degree)) instanceof Wall || isCollision(degree)) {
-            } else {
-                PossibleMoves.add(this.getLocation().getAdjacentLocation(degree));
-            }
-
+            if (this.getGrid().get(this.getLocation().getAdjacentLocation(degree)) instanceof Wall || isCollision(degree)) {}
+            else { PossibleMoves.add(this.getLocation().getAdjacentLocation(degree)); }
         }
-        PossibleMoves = checkTeleportLocations(PossibleMoves);
-        // PossibleMoves = removePrevious(PossibleMoves);
-        previous = this.getLocation();
-        totalMoves++;
         return checkValidty(PossibleMoves);
 
     }
-    public ArrayList<Location> checkTeleportLocations(ArrayList<Location> locs){
-        for(Location location:locs)
-        {
-            if(location.equals(new Location(9,-1)))
-                locs.set(locs.indexOf(location), new Location(9,18));
-            else if(location.equals(new Location(9,19)))
-                locs.set(locs.indexOf(location), new Location(9,18));
-        }
-        return locs;
-    }
-    public ArrayList<Location> removePrevious(ArrayList<Location> locs)
-    {
-        for(Location location:locs)
-        {
-            if(location.equals(getLocation()))
-                locs.remove(location);
-        }
-        return locs;
+    public Location checkTeleport(Location chosen){
+
+            if(chosen.equals(new Location(9,0))) {
+               chosen = new Location(9,17);
+            }
+            else if(chosen.equals(new Location(9,18))) {
+                chosen = new Location(9,1);
+            }
+        return chosen;
     }
 
     public ArrayList<Location> checkValidty(ArrayList<Location> locs) {
@@ -111,13 +86,5 @@ public class Enemy extends Critter {
             }
         }
         return locs;
-    }
-    public void replaceFood(Location chosen){
-        SmallFood food = new SmallFood();
-        if (last == true)
-            food.putSelfInGrid(getGrid(),previous);
-
-        if(getGrid().get(chosen) instanceof Food) last = true;
-        else last = false;
     }
 }
