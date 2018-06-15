@@ -1,4 +1,4 @@
-package projects.Pacman;
+package sample;
 
 /**
  * Created by jonah on 5/30/18.
@@ -19,7 +19,11 @@ public class PacManBoardRunner {
         world.buildBoard();
         final Player newPlayer = new Player();
         world.add(new Location(7, 8), newPlayer);
-        world.add(new Location(7, 9), new BigFood());
+        world.add(new Location(3, 9), new BigFood());
+        world.add(new Location(7, 9), new Blinky());
+       // world.add(new Location(9, 8), new Clyde());
+         world.add(new Location(9, 10), new Inky());
+        world.add(new Location(9, 9), new Pinky());
 
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
             public boolean dispatchKeyEvent(KeyEvent event) {
