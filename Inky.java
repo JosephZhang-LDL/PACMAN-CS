@@ -13,7 +13,7 @@ public class Inky extends Enemy {
         public Inky() {
             previous = this.getLocation();
             this.setDirection(360);
-            this.setColor(Color.PINK);
+            this.setColor(Color.CYAN);
         }
 
         public void act() {
