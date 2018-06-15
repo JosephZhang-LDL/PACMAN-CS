@@ -3,10 +3,19 @@ import info.gridworld.actor.Actor;
 import info.gridworld.actor.Critter;
 import info.gridworld.grid.Grid;
 import info.gridworld.grid.Location;
+import javafx.geometry.Pos;
+
 import java.util.ArrayList;
 
 public class Enemy extends Critter {
 
+   private  int totalMoves = 0;
+   private boolean last = false;
+    Location previous;
+    public Enemy(){
+        previous = this.getLocation();
+        last= false;
+    }
 
     public Location findPacMan() {
         Location loc = new Location(0, 0);
@@ -68,8 +77,31 @@ public class Enemy extends Critter {
             }
 
         }
+        PossibleMoves = checkTeleportLocations(PossibleMoves);
+        // PossibleMoves = removePrevious(PossibleMoves);
+        previous = this.getLocation();
+        totalMoves++;
         return checkValidty(PossibleMoves);
 
+    }
+    public ArrayList<Location> checkTeleportLocations(ArrayList<Location> locs){
+        for(Location location:locs)
+        {
+            if(location.equals(new Location(9,-1)))
+                locs.set(locs.indexOf(location), new Location(9,18));
+            else if(location.equals(new Location(9,19)))
+                locs.set(locs.indexOf(location), new Location(9,18));
+        }
+        return locs;
+    }
+    public ArrayList<Location> removePrevious(ArrayList<Location> locs)
+    {
+        for(Location location:locs)
+        {
+            if(location.equals(getLocation()))
+                locs.remove(location);
+        }
+        return locs;
     }
 
     public ArrayList<Location> checkValidty(ArrayList<Location> locs) {
@@ -79,5 +111,13 @@ public class Enemy extends Critter {
             }
         }
         return locs;
+    }
+    public void replaceFood(Location chosen){
+        SmallFood food = new SmallFood();
+        if (last == true)
+            food.putSelfInGrid(getGrid(),previous);
+
+        if(getGrid().get(chosen) instanceof Food) last = true;
+        else last = false;
     }
 }
