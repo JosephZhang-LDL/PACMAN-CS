@@ -1,3 +1,5 @@
+package projects.Pacman;
+
 /**
  * Created by jonah on 5/30/18.
  */

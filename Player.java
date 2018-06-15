@@ -73,10 +73,10 @@ public class Player extends Actor {
         //Act like this if Pacman is super
         if(isSuper)
         {
-            doSuper();
-            superSteps--;
+            doSuper();                                                                 //All actions in Super Method
+            superSteps--;                                                              //Makes sure that there's a limit
 
-            if(superSteps == 0){
+            if(superSteps == 0){                                                       //End Condition for super
                 isSuper = false;
                 System.out.println("SUPER IS " + isSuper);
             }
@@ -121,28 +121,9 @@ public class Player extends Actor {
         //Normal movement otherwise
         else if (canMove())
         {
-            Location loc = getLocation();
-            Location next = loc.getAdjacentLocation(getDirection());
-            teleported  = false;
-
-            if(isSmallFood(next))
-            {
-                scoreValue++;
-                System.out.println("Score is: " + scoreValue);
-            }
-            else if (isBigFood(next))
-            {
-                isSuper = true;
-                scoreValue+=10;
-                superSteps = SUPERLENGTH;
-                System.out.println("SUPER IS " + isSuper);
-            }
-
-
-            Actor inFront = gr.get(next);
-            moveTo(next);
+            move();
         }
-        //Wait what
+        //Temp code
         else {
 
         }
@@ -283,6 +264,31 @@ public class Player extends Actor {
 
     protected void paintComponent(Graphics g) {
         p.setText("Score:  " + scoreValue);
+    }
+
+    public void move() {
+        Grid<Actor> gr = getGrid();
+
+        Location loc = getLocation();
+        Location next = loc.getAdjacentLocation(getDirection());
+        teleported  = false;
+
+        if(isSmallFood(next))
+        {
+            scoreValue++;
+            System.out.println("Score is: " + scoreValue);
+        }
+        else if (isBigFood(next))
+        {
+            isSuper = true;
+            scoreValue+=10;
+            superSteps = SUPERLENGTH;
+            System.out.println("SUPER IS " + isSuper);
+        }
+
+
+        Actor inFront = gr.get(next);
+        moveTo(next);
     }
 
 }
