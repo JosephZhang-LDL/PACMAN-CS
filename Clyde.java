@@ -30,7 +30,7 @@ public class Clyde extends Enemy {
      */
     public void act() {
         if (isCloseEnough())
-        moveTo(selectMoveLocation(getMoveLocations()));
+            moveTo(selectMoveLocation(getMoveLocations()));
         else
             scatterMode(getMoveLocations());
         totalMoves++;
@@ -123,7 +123,7 @@ public class Clyde extends Enemy {
             if(canMove())
                 moveTo(loc.getAdjacentLocation(getDirection()));
             else {
-                setDirection(Location.LEFT);
+                setDirection(getDirection() + Location.LEFT);
             }
         }
     }
@@ -136,8 +136,10 @@ public class Clyde extends Enemy {
         double yCoor = Math.pow(current.getCol() - pacMan.getCol(), 2);
 
 
-        if (Math.sqrt(xCoor + yCoor) <= 8)
+        if (Math.sqrt(xCoor + yCoor) <= 8) {
+            isScattered = false;
             return true;
+        }
         else
             return false;
     }
