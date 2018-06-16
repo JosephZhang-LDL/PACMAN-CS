@@ -4,7 +4,6 @@ import info.gridworld.actor.*;
 import info.gridworld.grid.*;
 
 import javax.swing.*;
-import java.util.ArrayList;
 
 /**
  * Created by jonah on 5/31/18.
@@ -27,12 +26,11 @@ public class PacManBoard extends ActorWorld{
     @Override
     public void step(){
         if (!gameOver) {
-            super.step();                                              //Steps with parent class
+            super.step();
 
-            boolean isFood = false;                                     //Checks if there isn't food lefy
+            boolean isFood = false;
+            boolean isPac = false;
 
-
-            //COUNTS FOR FOOD WIN CONDIRION
             for (int i = 0; i < BOARDHEIGHT; i++) {
                 for (int j = 0; j < BOARDWIDTH; j++) {
                     if (isSmallFood(new Location(i, j)) || isBigFood((new Location(i, j)))) {
@@ -50,22 +48,31 @@ public class PacManBoard extends ActorWorld{
                         JOptionPane.WARNING_MESSAGE);
             }
 
-
-            //COUNTS FOR LOSE CONDITION
-            if (!isEnoughGhosts()) {
-                replaceGhosts();
+            for (int i = 0; i < BOARDHEIGHT; i++) {
+                for (int j = 0; j < BOARDWIDTH; j++) {
+                    Actor isItPacMan = (Actor)getGrid().get(new Location(i, j));
+                    if (isItPacMan instanceof Player) {
+                        isPac = true;
+                    }
+                }
             }
 
+            if (!isPac) {
+                System.out.println("Pacman LOSES!");
+                gameOver = true;
+                JOptionPane.showMessageDialog(null,
+                        "Pacman's a Loser smh",
+                        "Pacman's a Loser smh",
+                        JOptionPane.WARNING_MESSAGE);
+            }
         }
     }
 
     public boolean isSmallFood(Location nextOne) {
         Grid gr = this.getGrid();
-
         if(gr == null) {
             return false;
-        }
-        else {
+        } else {
             if(!gr.isValid(nextOne)) {
                 return false;
             } else {
@@ -89,86 +96,6 @@ public class PacManBoard extends ActorWorld{
         }
     }
 
-    public boolean isEnoughGhosts() {
-        int countGhosts = 0;
-
-        ArrayList<Object> actors = getActorList();
-        for (Object a : actors) {
-            if (a instanceof Enemy) {
-                countGhosts++;
-            }
-        }
-        if (countGhosts == 4)
-            return true;
-        else
-            return false;
-    }
-
-    public ArrayList<Object> getActorList() {
-        Location loc;
-        Grid gr = getGrid();
-        ArrayList<Object> actors = new ArrayList<Object>();
-        int x = gr.getNumCols() -1 ;
-        int y = gr.getNumRows() - 1;
-
-        for(int count = 1; count<x;count++){
-            for(int count_1 = 1; count_1< y; count_1++){
-                loc = new Location(count,count_1);
-                if(gr.isValid(loc))
-                    if(gr.get(loc) != null){
-                        actors.add(gr.get(loc));
-                    }
-            }
-        }
-        return actors;
-    }
-
-    public Location findPacMan() {
-        Location loc = new Location(0, 0);
-
-        ArrayList<Object> actors = getActorList();
-        for (Object a : actors) {
-            if (a instanceof Player) {
-                loc = ((Player) a).getLocation();
-                break;
-            }
-        }
-        return loc;
-
-
-    }
-
-    public void replaceGhosts() {
-        //Checks to see if all the ghosts are there
-        boolean pinkyThere = false;
-        boolean inkyThere = false;
-        boolean clydeThere = false;
-        boolean blinkyThere = false;
-
-        Location pacmanHere = findPacMan();
-        ArrayList<Object> actors = getActorList();
-
-        for (Object a : actors) {
-            if (a instanceof Blinky)
-                blinkyThere = true;
-            if (a instanceof Pinky)
-                pinkyThere = true;
-            if (a instanceof Clyde)
-                clydeThere = true;
-            if (a instanceof Inky)
-                inkyThere = true;
-        }
-
-        if (blinkyThere = false)
-            getGrid().put(pacmanHere, new Blinky());
-        else if (pinkyThere = false)
-            getGrid().put(pacmanHere, new Pinky());
-        else if (clydeThere = false)
-            getGrid().put(pacmanHere, new Clyde());
-        else if (inkyThere = false)
-            getGrid().put(pacmanHere, new Inky());
-
-    }
     /**
      * Please don't expand this
      */

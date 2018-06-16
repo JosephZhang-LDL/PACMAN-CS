@@ -1,17 +1,17 @@
-package sample;
+package projects.Pacman;
 import info.gridworld.actor.Actor;
 import info.gridworld.actor.Critter;
 import info.gridworld.grid.Grid;
 import info.gridworld.grid.Location;
-import javafx.geometry.Pos;
-
 import java.util.ArrayList;
 
+
 public class Enemy extends Critter {
-
-
+    //private Location prevLoc = getLocation();
+    
     public Enemy(){
     }
+
 
     public Location findPacMan() {
         Location loc = new Location(0, 0);
@@ -25,6 +25,7 @@ public class Enemy extends Critter {
         }
         return loc;
     }
+    /*
     public boolean isCollision(int direction) {
         Grid gr = getGrid();
         if(gr == null) {
@@ -40,6 +41,7 @@ public class Enemy extends Critter {
             }
         }
     }
+    */
     public ArrayList<Object> getActorList() {
         Location loc;
         Grid gr = getGrid();
@@ -60,22 +62,31 @@ public class Enemy extends Critter {
     }
 
     public ArrayList<Location> getMoveLocations() {
-        ArrayList<Location> PossibleMoves = new ArrayList<>();
+        ArrayList<Location> PossibleMoves = new ArrayList<Location>();
         for (int degree = 0; degree < 360; degree += 90) {
-            if (this.getGrid().get(this.getLocation().getAdjacentLocation(degree)) instanceof Wall || isCollision(degree)) {}
+            if (this.getGrid().get(this.getLocation().getAdjacentLocation(degree)) instanceof Wall ||
+                    this.getGrid().get(this.getLocation().getAdjacentLocation(degree)) instanceof Enemy) {
+
+            }
+            /*
+            else if(getGrid().get(getLocation().getAdjacentLocation(degree)).equals(prevLoc)) {
+
+            } */
             else { PossibleMoves.add(this.getLocation().getAdjacentLocation(degree)); }
         }
+
+        //prevLoc = getLocation();
         return checkValidty(PossibleMoves);
 
     }
     public Location checkTeleport(Location chosen){
 
-            if(chosen.equals(new Location(9,0))) {
-               chosen = new Location(9,17);
-            }
-            else if(chosen.equals(new Location(9,18))) {
-                chosen = new Location(9,1);
-            }
+        if(chosen.equals(new Location(9,0))) {
+            chosen = new Location(9,17);
+        }
+        else if(chosen.equals(new Location(9,18))) {
+            chosen = new Location(9,1);
+        }
         return chosen;
     }
 

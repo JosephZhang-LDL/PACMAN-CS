@@ -15,11 +15,15 @@ public class Clyde extends Enemy {
     private Location Pacman = new Location(0, 0);
     private int totalMoves = 0;
     private boolean isScattered = false;
+    boolean last = false;
+    Location previous;
+
 
     /**
      * Constructor
      */
     public Clyde() {
+        previous = this.getLocation();
         this.setDirection(360);
         this.setColor(Color.ORANGE);
     }
@@ -29,10 +33,27 @@ public class Clyde extends Enemy {
      * Pacman distance <= 8, he will chase until pacman too far
      */
     public void act() {
-        if (isCloseEnough())
+        SmallFood food = new SmallFood();
+
+        if (last)
+            food.putSelfInGrid(getGrid(), previous);
+
+
+        if(totalMoves < 40){}
+
+        else if(totalMoves == 40){
+            if(this.getGrid().get(new Location(7,9)) == null || getGrid().get(new Location(7,9)) instanceof SmallFood)
+            {
+                moveTo(new Location(7, 9));
+            }
+        }
+
+        else if (isCloseEnough())
             moveTo(selectMoveLocation(getMoveLocations()));
+
         else
             scatterMode(getMoveLocations());
+
         totalMoves++;
     }
 
@@ -83,7 +104,7 @@ public class Clyde extends Enemy {
             Location target = findPacMan();
             Location chosen = new Location(0, 0);
             double distance = 10000;
-            double temp = 0;
+            double temp;
             for (Location location : locs) {
                 temp = Math.sqrt((location.getCol() - target.getCol()) * (location.getCol() - target.getCol()) + (location.getRow() - target.getRow()) * (location.getRow() - target.getRow()));
                 if (temp < distance) {
@@ -91,6 +112,13 @@ public class Clyde extends Enemy {
                     distance = temp;
                 }
             }
+
+
+            //Checks if it was a food;
+            if(getGrid().get(chosen) instanceof Food) last = true;
+            else last = false;
+
+            previous = this.getLocation();
             return chosen;
         }
         else return this.getLocation();
