@@ -46,6 +46,7 @@ public class Blinky extends Enemy {
             else last = false;
 
             previous = this.getLocation();
+            chosen = checkTeleport(chosen);
             return chosen;
         }
 
