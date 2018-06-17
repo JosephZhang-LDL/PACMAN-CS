@@ -4,6 +4,7 @@ import info.gridworld.actor.*;
 import info.gridworld.grid.*;
 
 import javax.swing.*;
+import java.util.ArrayList;
 
 /**
  * Created by jonah on 5/31/18.
@@ -21,7 +22,7 @@ public class PacManBoard extends ActorWorld{
     }
 
     /**
-     * Looks at step sequence for the entire board, to check for some game conditions
+     * Looks at step sequence for the entire board, to check for some game conditions like lose or win
      */
     @Override
     public void step(){
@@ -58,18 +59,24 @@ public class PacManBoard extends ActorWorld{
             }
 
             if (!isPac) {
-                System.out.println("Pacman LOSES!");
-                gameOver = true;
-                JOptionPane.showMessageDialog(null,
-                        "Pacman's a Loser smh",
-                        "Pacman's a Loser smh",
-                        JOptionPane.WARNING_MESSAGE);
+                loseStatement();
+            }
+
+
+            if (!isEnoughGhosts()) {
+                findAndReplaceGhosts();
+                loseStatement();
             }
         }
     }
 
+    /**
+     * Checks to see if a food is a small food
+     * @param nextOne Checks the next location
+     * @return whether or not it is small food
+     */
     public boolean isSmallFood(Location nextOne) {
-        Grid gr = this.getGrid();
+        Grid gr = this.getGrid();                              //Creates a grid
         if(gr == null) {
             return false;
         } else {
@@ -77,13 +84,18 @@ public class PacManBoard extends ActorWorld{
                 return false;
             } else {
                 Actor neighbor = (Actor)gr.get(nextOne);
-                return neighbor instanceof SmallFood;
+                return neighbor instanceof SmallFood;         //If neighbor is a small food, there you go
             }
         }
     }
 
-    public boolean isBigFood(Location nextOne) {
-        Grid gr = this.getGrid();
+    /**
+     * Checks to see if a food is a big food
+     * @param nextOne Checks the next location
+     * @return whether or not it is big food
+     */
+    public boolean isBigFood(Location nextOne) {                     //Refer to comments for small food because this is
+        Grid gr = this.getGrid();                                    //literally the same method lol
         if(gr == null) {
             return false;
         } else {
@@ -97,7 +109,116 @@ public class PacManBoard extends ActorWorld{
     }
 
     /**
-     * Please don't expand this
+     * Checks for ghosts
+     * @return if there are four ghosts on the map
+     */
+    public boolean isEnoughGhosts() {                                             //Checks to see if there are enough
+        int countGhosts = 0;                                                      //ghosts on the map
+
+        for (int i = 0; i < BOARDHEIGHT; i++) {
+            for (int j = 0; j < BOARDWIDTH; j++) {
+                Actor isItGhost = (Actor)getGrid().get(new Location(i, j));
+                if (isItGhost instanceof Enemy) {
+                    countGhosts++;
+                }
+            }
+        }
+
+        return countGhosts == 4;
+    }
+
+    /**
+     * Finds the location of the PacMan on the map
+     * @return
+     */
+    public Location findPacMan() {
+        Location loc = new Location(0, 0);                      //Temp location
+
+        ArrayList<Object> actors = getActorList();                    //Gets the list of actors
+        for (Object a : actors) {
+            if (a instanceof Player) {                                //if its an instance of a player then it locks down the position
+                loc = ((Player) a).getLocation();
+                break;
+            }
+        }
+        return loc;
+    }
+
+    /**
+     * Prints the lose statement
+     */
+    public void loseStatement() {
+        System.out.println("Pacman LOSES! ghost style");
+        gameOver = true;
+        JOptionPane.showMessageDialog(null,
+                "Pacman's a Loser smh",
+                "Pacman's a Loser smh",
+                JOptionPane.WARNING_MESSAGE);
+    }
+
+    /**
+     * Finds and replaces ghost on the map that pacman COULD'VE eaten
+     */
+    public void findAndReplaceGhosts() {
+        Location hereisPacman = findPacMan();
+        boolean isBlinky = false;
+        boolean isInky = false;
+        boolean isPinky = false;
+        boolean isClyde = false;
+
+
+        for (int i = 0; i < BOARDHEIGHT; i++) {                                    //Looks to see which ghost is missing
+            for (int j = 0; j < BOARDWIDTH; j++) {
+                Actor isItGhost = (Actor)getGrid().get(new Location(i, j));
+                if (isItGhost instanceof Blinky)
+                    isBlinky = true;
+                else if (isItGhost instanceof Inky)
+                    isInky = true;
+                else if (isItGhost instanceof Pinky)
+                    isPinky = true;
+                else if (isItGhost instanceof Clyde)
+                    isClyde = true;
+            }
+        }
+
+
+        //If any of the ghosts are missing it replaces them on the map
+        if (!isBlinky)
+            getGrid().put(hereisPacman, new Blinky());
+        if (!isInky)
+            getGrid().put(hereisPacman, new Inky());
+        if (!isPinky)
+            getGrid().put(hereisPacman, new Pinky());
+        if (!isClyde)
+            getGrid().put(hereisPacman, new Clyde());
+
+    }
+
+    /**
+     * Gets a list of actors on the map
+     * @return returns an ArrayList of actors on the map
+     */
+    public ArrayList<Object> getActorList() {
+        Location loc;
+        Grid gr = getGrid();
+        ArrayList<Object> actors = new ArrayList<Object>();
+        int x = gr.getNumCols() - 1;
+        int y = gr.getNumRows() - 1;
+
+        for (int count = 1; count < x; count++) {
+            for (int count_1 = 1; count_1 < y; count_1++) {
+                loc = new Location(count, count_1);
+                if (gr.isValid(loc))
+                    if (gr.get(loc) != null) {
+                        actors.add(gr.get(loc));
+                    }
+            }
+        }
+        return actors;
+    }
+
+    /**
+     * Please don't expand this, because it builds the board
      */
     public void buildBoard(){
         for(int i = 0; i < PacManBoard.BOARDWIDTH; i++){

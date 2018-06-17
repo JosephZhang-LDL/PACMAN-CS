@@ -1,14 +1,10 @@
 package projects.Pacman;
 import info.gridworld.actor.Actor;
-        import info.gridworld.actor.Flower;
-        import info.gridworld.grid.Grid;
+import info.gridworld.grid.Grid;
         import info.gridworld.grid.Location;
 
         import javax.swing.*;
         import java.awt.*;
-        import java.awt.event.KeyEvent;
-        import java.awt.event.KeyListener;
-        import java.util.Scanner;
 
 /**
  * Created by 20ZhangJ on 6/1/2018.
@@ -25,6 +21,7 @@ public class Player extends Actor {
     private final int DOWN  = -2;
     private int checkirection;
     private boolean teleported;
+    private boolean isCherries;
     private JLabel p;
     JFrame scoreBoard;
 
@@ -32,13 +29,17 @@ public class Player extends Actor {
      * Sets everything up
      */
     public Player() {
+        //Basic Stuff
         lives = 3;
         scoreValue = 0;
         isSuper = false;
         setColor(Color.YELLOW);
         checkirection = 0;
         teleported = false;
+        isCherries = false;
         superSteps = 0;
+
+        //Scoreboard stuff
         scoreBoard = new JFrame();
         scoreBoard.setSize(new Dimension(200, 100));
         scoreBoard.setVisible(true);
@@ -73,11 +74,16 @@ public class Player extends Actor {
         //Act like this if Pacman is super
         if(isSuper)
         {
-            doSuper();                                                                 //All actions in Super Method
-            superSteps--;                                                              //Makes sure that there's a limit
+            doSuper();
+            superSteps--;
 
-            if(superSteps == 0){                                                       //End Condition for super
+            if(superSteps == 0){
                 isSuper = false;
+                isCherries = false;
+                gr.remove(new Location(2, 1));
+                gr.remove(new Location(1, 17));
+                gr.remove(new Location(19, 1));
+                gr.remove(new Location(19, 17));
                 System.out.println("SUPER IS " + isSuper);
             }
         }
@@ -123,7 +129,7 @@ public class Player extends Actor {
         {
             move();
         }
-        //Temp code
+        //Wait what
         else {
 
         }
@@ -135,15 +141,22 @@ public class Player extends Actor {
         return 1;
     }
 
-    public void die() {
-
-    }
 
     /**
      * Separate sort of act method that changes some things up if pacman is super
      */
     public void doSuper() {
         Grid<Actor> gr = getGrid();
+
+        if (!isCherries) {
+            gr.put(new Location(2, 1), new Cherry());
+            gr.put(new Location(1, 17), new Cherry());
+            gr.put(new Location(19, 1), new Cherry());
+            gr.put(new Location(19, 17), new Cherry());
+            isCherries = true;
+
+        }
+
         if (getLocation().equals(new Location(9,0)) && !teleported)               //Teleport from left side
         {
             if(isSmallFood(new Location(9, 18)))
@@ -177,6 +190,7 @@ public class Player extends Actor {
             moveTo(new Location(9,0));
             teleported = true;
         }
+
         //Normal movement otherwise, but it's super this happens
         else if (canMove())
         {
@@ -195,7 +209,10 @@ public class Player extends Actor {
                 scoreValue += 20;
                 isSuper = true;
             }
-
+            else if (isCherry(next)) {
+                gr.remove(next);
+                scoreValue += 100;
+            }
 
             Actor inFront = gr.get(next);
             moveTo(next);
@@ -262,10 +279,24 @@ public class Player extends Actor {
         }
     }
 
-    protected void paintComponent(Graphics g) {
-        p.setText("Score:  " + scoreValue);
+    public boolean isCherry(Location nextOne) {
+        Grid gr = this.getGrid();
+        if(gr == null) {
+            return false;
+        } else {
+            Location loc = this.getLocation();
+            //Location next = loc.getAdjacentLocation(this.getDirection());
+            if(!gr.isValid(nextOne)) {
+                return false;
+            } else {
+                Actor neighbor = (Actor)gr.get(nextOne);
+                /*if (neighbor instanceof Food) {
+                    return true;
+                }*/
+                return neighbor instanceof Cherry;
+            }
+        }
     }
-
     public void move() {
         Grid<Actor> gr = getGrid();
 
@@ -289,6 +320,10 @@ public class Player extends Actor {
 
         Actor inFront = gr.get(next);
         moveTo(next);
+    }
+
+    protected void paintComponent(Graphics g) {
+        p.setText("Score:  " + scoreValue);
     }
 
 }

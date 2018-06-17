@@ -1,7 +1,7 @@
 /**
  * Created by 19ZalevA on 6/6/2018.
  */
-package sample;
+package projects.Pacman;
 import info.gridworld.grid.Location;
 import java.awt.*;
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ public class Pinky extends Enemy {
     public Pinky() {
         previous = this.getLocation();
         this.setDirection(360);
-        this.setColor(Color.RED);
+        this.setColor(Color.PINK);
     }
 
     public void act() {
@@ -34,7 +34,7 @@ public class Pinky extends Enemy {
         totalMoves++;
     }
     public int Getdirection() {
-       int direction = 0;
+        int direction = 0;
 
         ArrayList<Object> actors = getActorList();
         for (Object a : actors) {
